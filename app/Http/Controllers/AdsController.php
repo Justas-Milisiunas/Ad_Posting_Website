@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Ad;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -24,7 +25,8 @@ class AdsController extends Controller
      */
     public function index()
     {
-        return view('ads.index');
+        $ads = Ad::orderBy('created_at', 'desc')->paginate(9);
+        return view('ads.index')->with('ads', $ads);
     }
 
     /**
