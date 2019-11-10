@@ -36,7 +36,11 @@ class AdsController extends Controller
      */
     public function create()
     {
-        //
+        if (auth()->user()->role != 1) {
+            return redirect('/posts')->with('error', 'Unauthorized Page');
+        }
+
+        return view('ads.create');
     }
 
     /**

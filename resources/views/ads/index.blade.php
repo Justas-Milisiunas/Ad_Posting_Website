@@ -4,7 +4,16 @@
     <div class="container">
         <div class="card">
             <div class="card-header">
-                <h3>Skelbimai</h3>
+                <div class="row">
+                    <div class="col">
+                        <h3 class="card-text">Skelbimai</h3>
+                    </div>
+                    <div class="col text-right">
+                        <a href="/ads/create" class="btn btn-outline-success">
+                            <img src="/storage/images/add.png" style="width: 16px">Įdėti Skelbimą
+                        </a>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
                 @isset($ads)
