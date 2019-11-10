@@ -13,7 +13,15 @@
         <div class="card">
             @isset($ad)
                 <div class="card-header">
-                    <h3>{{$ad->name}}</h3>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <h3>{{$ad->name}}</h3>
+                        </div>
+                        <div class="col-sm-4 text-right">
+                            <a href="/ads/{{$ad->id}}/edit" class="btn btn-outline-primary">Redaguoti</a>
+                            <a href="" class="btn btn-outline-danger">Šalinti</a>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body row">
                     <div class="col-sm-8">
@@ -22,11 +30,11 @@
                     <div class="col-sm-4">
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">
-                                <img src="/storage/images/email.png" style="width: 32px; margin-right: 5px" >
+                                <img src="/storage/images/email.png" style="width: 32px; margin-right: 5px">
                                 {{$ad->user->email}}
                             </li>
                             <li class="list-group-item">
-                                <img src="/storage/images/phone.png" style="width: 32px; margin-right: 5px" >
+                                <img src="/storage/images/phone.png" style="width: 32px; margin-right: 5px">
                                 {{$ad->user->mobile_number}}
                             </li>
                             <li class="list-group-item">{{$ad->description}}</li>
@@ -48,9 +56,10 @@
                     <p class="card-text">{{$comment->message}}</p>
                     <hr>
                 @endforeach
-{{--                TODO : Make comments writing functionality                --}}
+                {{--                TODO : Make comments writing functionality                --}}
                 <div class="input-group">
-                    <textarea class="form-control" aria-label="With textarea" placeholder="Jūsų komentaras" style="min-height: 40px; max-height: 150px"></textarea>
+                    <textarea class="form-control" aria-label="With textarea" placeholder="Jūsų komentaras"
+                              style="min-height: 40px; max-height: 150px"></textarea>
                 </div>
                 <a href="#" style="margin-top: 15px" class="btn btn-primary">Komentuoti</a>
             </div>
