@@ -37,7 +37,7 @@ class AdsController extends Controller
     public function create()
     {
         if (auth()->user()->role != 1) {
-            return redirect('/posts')->with('error', 'Unauthorized Page');
+            return redirect('/ads')->with('error', 'Unauthorized Page');
         }
 
         return view('ads.create');
@@ -51,7 +51,7 @@ class AdsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // TODO: Add new ad storing
     }
 
     /**
@@ -74,7 +74,15 @@ class AdsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $ad = Ad::find($id);
+
+        // TODO: active user authentication
+//        if(auth()->user()->id != $ad->user_id ||
+//        auth()->user()->role != 1) {
+//            return redirect('/ads')->with('error', 'Unauthorized Page');
+//        }
+
+        return view('ads.edit')->with('ad', $ad);
     }
 
     /**
