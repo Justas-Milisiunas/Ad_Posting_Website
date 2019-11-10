@@ -8,7 +8,7 @@
     </div>
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-secondary"><b>{{$ad->name}}</b></li>
-            <li class="list-group-item">{{$ad->description}}</li>
+            <li class="list-group-item text-truncate">{{$ad->description}}</li>
             <li class="list-group-item">
                 <small>
                     {{$ad->created_at}} įkėlė {{$ad->user->name}}
