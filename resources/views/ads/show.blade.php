@@ -30,6 +30,10 @@
                     <div class="col-sm-4">
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">
+                                <img src="/storage/images/price.png" style="width: 32px; margin-right: 5px">
+                                <b>{{$ad-> price}}€</b>
+                            </li>
+                            <li class="list-group-item">
                                 <img src="/storage/images/email.png" style="width: 32px; margin-right: 5px">
                                 {{$ad->user->email}}
                             </li>
