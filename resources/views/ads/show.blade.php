@@ -18,8 +18,15 @@
                             <h3>{{$ad->name}}</h3>
                         </div>
                         <div class="col-sm-4 text-right">
-                            <a href="/ads/{{$ad->id}}/edit" class="btn btn-outline-primary">Redaguoti</a>
-                            <a href="" class="btn btn-outline-danger">Šalinti</a>
+                            <a href="/ads/{{$ad->id}}/edit" class="btn btn-outline-primary" style="margin-right: 5px">Redaguoti</a>
+{{--                            <a href="/ads/{{$ad->id}}" class="btn btn-outline-danger">Šalinti</a>--}}
+                            {!! Form::open(['action' => ['AdsController@destroy', $ad->id], 'method' => 'DELETE', 'class' => 'float-right']) !!}
+                            	{!! Form::submit('Šalinti', ['class' => 'btn btn-outline-danger']) !!}
+                            {!! Form::close() !!}
+{{--                            {!! Form::open(['action' => ['AdsController@destroy', $post->id], 'method' => 'DELETE', 'class' => 'float-right']) !!}--}}
+{{--                            --}}{{--            {{Form::hidden('_method', 'DELETE')}}--}}
+{{--                            {{Form::submit('Delete', ['class' => 'btn btn-danger'])}}--}}
+{{--                            {!! Form::close() !!}--}}
                         </div>
                     </div>
                 </div>
