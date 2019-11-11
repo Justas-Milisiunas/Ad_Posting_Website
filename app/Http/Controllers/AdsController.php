@@ -105,6 +105,10 @@ class AdsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = Ad::find($id);
+
+        // TODO: add access control
+        $post->delete();
+        return redirect('/ads')->with('success', 'Skelbimas sėkmingai panaikintas');
     }
 }
