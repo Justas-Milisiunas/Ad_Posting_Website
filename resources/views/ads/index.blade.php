@@ -33,7 +33,7 @@
             </div>
             @isset($ads)
                 @if (count($ads) > 0)
-                    <div class="card-footer align-self-center">
+                    <div class="card-footer">
                         {{$ads->links()}}
                     </div>
                 @endif
