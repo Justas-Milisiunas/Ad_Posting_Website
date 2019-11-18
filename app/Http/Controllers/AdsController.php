@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Ad;
+use App\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -55,7 +56,7 @@ class AdsController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display ad information. Loads comments data for dropdown list
      *
      * @param int $id
      * @return Response
@@ -63,7 +64,13 @@ class AdsController extends Controller
     public function show($id)
     {
         $ad = Ad::find($id);
-        return view('ads.show')->with('ad', $ad);
+        $comments = null;
+
+        if (auth()->user()->id == $ad->user_id) {
+            $comments = Comment::where('ad_id', $id)->where('comment_id', null)->pluck('message', 'id')->toArray();
+        }
+
+        return view('ads.show')->with('ad', $ad)->with('comments', $comments);
     }
 
     /**

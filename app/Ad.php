@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @method static orderBy()
  * @method static find(int $id)
+ * @method static pluck(string $string, string $string1)
  */
 class Ad extends Model
 {

@@ -22,4 +22,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('ads', 'AdsController');
 
+Route::post('/comments/{ad_id}', 'CommentsController@store');
+
 Route::get('/users', 'UsersController@index');
