@@ -19,14 +19,14 @@
                         </div>
                         <div class="col-sm-4 text-right">
                             <a href="/ads/{{$ad->id}}/edit" class="btn btn-outline-primary" style="margin-right: 5px">Redaguoti</a>
-{{--                            <a href="/ads/{{$ad->id}}" class="btn btn-outline-danger">Šalinti</a>--}}
+                            {{--                            <a href="/ads/{{$ad->id}}" class="btn btn-outline-danger">Šalinti</a>--}}
                             {!! Form::open(['action' => ['AdsController@destroy', $ad->id], 'method' => 'DELETE', 'class' => 'float-right']) !!}
-                            	{!! Form::submit('Šalinti', ['class' => 'btn btn-outline-danger']) !!}
+                            {!! Form::submit('Šalinti', ['class' => 'btn btn-outline-danger']) !!}
                             {!! Form::close() !!}
-{{--                            {!! Form::open(['action' => ['AdsController@destroy', $post->id], 'method' => 'DELETE', 'class' => 'float-right']) !!}--}}
-{{--                            --}}{{--            {{Form::hidden('_method', 'DELETE')}}--}}
-{{--                            {{Form::submit('Delete', ['class' => 'btn btn-danger'])}}--}}
-{{--                            {!! Form::close() !!}--}}
+                            {{--                            {!! Form::open(['action' => ['AdsController@destroy', $post->id], 'method' => 'DELETE', 'class' => 'float-right']) !!}--}}
+                            {{--                            --}}{{--            {{Form::hidden('_method', 'DELETE')}}--}}
+                            {{--                            {{Form::submit('Delete', ['class' => 'btn btn-danger'])}}--}}
+                            {{--                            {!! Form::close() !!}--}}
                         </div>
                     </div>
                 </div>
@@ -63,16 +63,38 @@
                 <h5 class="card-title">Komentarai</h5>
                 <hr>
                 @foreach ($ad->comments as $comment)
-                    <p class="card-text"><b>{{$comment->user->name}}</b> {{$comment->created_at}}</p>
-                    <p class="card-text">{{$comment->message}}</p>
-                    <hr>
+                    @if ($comment->comment_id == null)
+                        <p class="card-text"><b>{{$comment->user->name}}</b> {{$comment->created_at}}</p>
+                        <p class="card-text">{{$comment->message}}</p>
+                        <hr>
+                        <div class="ml-5">
+                            @foreach ($comment->replies as $key=>$reply)
+                                <p class="card-text"><b>{{$reply->user->name}}</b> {{$comment->created_at}}</p>
+                                <p class="card-text">{{$reply->message}}</p>
+                                @if ($key != count($comment->replies) - 1)
+                                    <hr>
+                                @endif
+                            @endforeach
+                        </div>
+                        @if (count($comment->replies) > 0)
+                            <hr>
+                        @endif
+                    @endif
                 @endforeach
-                {{--                TODO : Make comments writing functionality                --}}
-                <div class="input-group">
-                    <textarea class="form-control" aria-label="With textarea" placeholder="Jūsų komentaras"
-                              style="min-height: 40px; max-height: 150px"></textarea>
-                </div>
-                <a href="#" style="margin-top: 15px" class="btn btn-primary">Komentuoti</a>
+                {{--                If user's role is user. Display comment writing form--}}
+                @if (Auth::user()->role == 1)
+                    {!! Form::open(['action' => ['CommentsController@store', $ad->id], 'method' => 'POST']) !!}
+                    @if (Auth::user()->id == $ad->user_id && count($comments) > 1)
+                        <div class="input-group">
+                            {!! Form::select('selected_comment', $comments, null, ['class' => 'form-control']) !!}
+                        </div>
+                    @endif
+                    <div class="input-group" style="margin-top: 15px">
+                        {!! Form::textarea('comment', '', ['class' => 'form-control', 'placeholder' => 'Jūsų komentaras', 'style' => 'min-height: 40px; max-height: 150px']) !!}
+                    </div>
+                    {!! Form::submit('Komentuoti', ['class' => 'btn btn-primary', 'style' => 'margin-top: 15px']) !!}
+                    {!! Form::close() !!}
+                @endif
             </div>
         </div>
     </div>
