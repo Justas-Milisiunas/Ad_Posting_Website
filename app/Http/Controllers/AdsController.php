@@ -6,6 +6,9 @@ use App\Ad;
 use App\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class AdsController extends Controller
 {
@@ -52,7 +55,33 @@ class AdsController extends Controller
      */
     public function store(Request $request)
     {
-        // TODO: Add new ad storing
+        // If not registered user
+        if (auth()->user()->role != 1) {
+            return redirect('/')->with('error', 'Unauthorized Page');
+        }
+
+        $this->validate($request, [
+            'name' => 'required|max:255|min:4',
+            'price' => 'required|min:1',
+            'description' => 'required|min:4',
+            'images' => 'required|min:1|max:3'
+        ]);
+
+        $new_ad = new Ad;
+        $new_ad->name = $request->input('name');
+        $new_ad->description = $request->input('description');
+        $new_ad->price = $request->input('price');
+        $new_ad->user_id = auth()->user()->id;
+        $new_ad->expiration = $request->input('expiration');
+        $new_ad->save();
+
+        $saved_ad = Ad::find(DB::getPdo()->lastInsertId());
+
+        foreach ($request->file('images') as $i=>$image) {
+            $image->store('public/images/'.$saved_ad->id);
+        }
+
+        return redirect('/')->with('success', 'Skelbimas sėkmingai sukurtas');
     }
 
     /**
