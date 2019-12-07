@@ -22,6 +22,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('ads', 'AdsController');
 Route::resource('admin', 'AdminController');
+Route::get("admin/allow/{id}", 'AdminController@allow');
 
 Route::post('/comments/{ad_id}', 'CommentsController@store');
 

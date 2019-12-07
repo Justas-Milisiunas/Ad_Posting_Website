@@ -23,6 +23,18 @@ class AdminController extends Controller
         return view('admin.index')->with('users', $users);
     }
 
+    public function allow($id) {
+        if (auth()->user()->role != 2) {
+            return redirect('/admin')->with('error', 'Unauthorized Page');
+        }
+
+        $user = User::find($id);
+        $user->create_ad = true;
+        $user->save();
+
+        return redirect('/admin')->with('success', 'Leidimas sėkmingai suteiktas');
+    }
+
     /**
      * Show the form for creating a new resource.
      *

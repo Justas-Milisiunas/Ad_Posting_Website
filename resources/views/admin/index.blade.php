@@ -89,10 +89,10 @@
                                 {{$user->created_at}}
                             </div>
                             <div class="col">
-                                @if ($user->role == 1)
-                                    <button type="button" class="btn btn-outline-success btn-sm">
+                                @if ($user->role == 1 && $user->create_ad == false)
+                                    <a href="/admin/allow/{{$user->id}}" class="btn btn-outline-success btn-sm">
                                         Leisti
-                                    </button>
+                                    </a>
                                 @endif
                             </div>
                             <div class="col">
@@ -113,12 +113,9 @@
                     <p class="card-text">Nerastas nei vienas vartotojas</p>
                 @endif
             </div>
-            {{--            TODO: align paginator in the center--}}
-{{--            @if (count($users) >= 10)--}}
                 <div class="card-footer">
                     {{$users->links()}}
                 </div>
-{{--            @endif--}}
         </div>
     </div>
 @stop

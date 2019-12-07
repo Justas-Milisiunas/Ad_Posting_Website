@@ -9,9 +9,11 @@
                         <h3 class="card-text">Skelbimai</h3>
                     </div>
                     <div class="col text-right">
-                        <a href="/ads/create" class="btn btn-outline-success">
-                            <img src="/storage/images/add.png" style="width: 16px">Įdėti Skelbimą
-                        </a>
+                        @if (isset(Auth::user()->id) && Auth::user()->create_ad == true)
+                            <a href="/ads/create" class="btn btn-outline-success">
+                                <img src="/storage/images/add.png" style="width: 16px">Įdėti Skelbimą
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>
