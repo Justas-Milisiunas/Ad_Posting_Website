@@ -84,9 +84,9 @@ class AdsController extends Controller
         }
 
         foreach ($request->file('images') as $i => $image) {
-            $file_name = time() . '.' . $image->getClientOriginalExtension();
+            $file_name = time() . '' . $i . '.' . $image->getClientOriginalExtension();
             Image::make($image->getRealPath())
-                ->resize(300, 200)
+                ->resize(600, 400)
                 ->insert(storage_path('app/watermark.png'), 'bottom-right', 10, 10)
                 ->save(storage_path('app/public/uploads/' . $saved_ad->id . '/' . $file_name));
 
