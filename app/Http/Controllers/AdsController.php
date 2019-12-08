@@ -71,7 +71,8 @@ class AdsController extends Controller
             'name' => 'required|max:255|min:4',
             'price' => 'required|min:1',
             'description' => 'required|min:4',
-            'images' => 'required|min:1|max:3'
+            'images' => 'required|min:1|max:3',
+            'expiration' => 'required'
         ]);
 
         $new_ad = new Ad;
@@ -133,12 +134,11 @@ class AdsController extends Controller
     public function edit($id)
     {
         $ad = Ad::find($id);
-
-        // TODO: active user authentication
-//        if(auth()->user()->id != $ad->user_id ||
-//        auth()->user()->role != 1) {
-//            return redirect('/ads')->with('error', 'Unauthorized Page');
-//        }
+        if (!auth()->check() ||
+            auth()->user()->role != 1 ||
+            auth()->user()->id != $ad->user->id) {
+            return redirect('/ads/' . $ad->id)->with('error', 'Unauthorized Page');
+        }
 
         return view('ads.edit')->with('ad', $ad);
     }
@@ -149,10 +149,33 @@ class AdsController extends Controller
      * @param Request $request
      * @param int $id
      * @return Response
+     * @throws ValidationException
      */
     public function update(Request $request, $id)
     {
-        //
+        $ad = Ad::find($id);
+        // If not registered user
+        if ($ad == null ||
+            auth()->user()->role != 1 ||
+            auth()->user()->create_ad == false ||
+            auth()->user()->id != $ad->user->id) {
+            return redirect('/')->with('error', 'Unauthorized Page');
+        }
+
+        $this->validate($request, [
+            'name' => 'required|max:255|min:4',
+            'price' => 'required|min:1',
+            'description' => 'required|min:4',
+            'expiration' => 'required'
+        ]);
+
+        $ad->name = $request->input('name');
+        $ad->description = $request->input('description');
+        $ad->price = $request->input('price');
+        $ad->expiration = $request->input('expiration');
+        $ad->save();
+
+        return redirect('/ads/'.$ad->id)->with('success', 'Skelbimas sėkmingai atnaujintas');
     }
 
     /**

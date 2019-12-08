@@ -15,6 +15,7 @@
                     @endif
 
                     Sėkmingai prisijungėte!
+
                 </div>
             </div>
         </div>

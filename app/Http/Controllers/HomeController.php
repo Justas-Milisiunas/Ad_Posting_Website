@@ -25,6 +25,6 @@ class HomeController extends Controller
     public function index()
     {
         // TODO: Add switch for different roles
-        return view('home');
+        return redirect('/')->with('succes', 'Sėkmingai prisijungėte!');
     }
 }

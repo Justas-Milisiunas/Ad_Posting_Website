@@ -18,7 +18,10 @@
                             <h3>{{$ad->name}}</h3>
                         </div>
                         <div class="col-sm-4 text-right">
-                            <a href="/ads/{{$ad->id}}/edit" class="btn btn-outline-primary" style="margin-right: 5px">Redaguoti</a>
+                            @if (Auth::check() && Auth::user()->role == 1 && Auth::user()->id == $ad->user->id)
+                                <a href="/ads/{{$ad->id}}/edit" class="btn btn-outline-primary"
+                                   style="margin-right: 5px">Redaguoti</a>
+                            @endif
                             @if (Auth::check() && Auth::user()->role == 3)
                                 {!! Form::open(['action' => ['AdsController@destroy', $ad->id], 'method' => 'DELETE', 'class' => 'float-right']) !!}
                                 {!! Form::submit('Šalinti', ['class' => 'btn btn-outline-danger']) !!}
@@ -81,7 +84,7 @@
                     @endforeach
                 @endif
                 {{--                If user's role is user. Display comment writing form--}}
-                @if (!Auth::guest() && Auth::user()->role == 1)
+                @if (Auth::check() && Auth::user()->role == 1)
                     {!! Form::open(['action' => ['CommentsController@store', $ad->id], 'method' => 'POST']) !!}
                     @if (Auth::user()->id == $ad->user_id && count($comments) > 1)
                         <div class="input-group">
@@ -93,6 +96,8 @@
                     </div>
                     {!! Form::submit('Komentuoti', ['class' => 'btn btn-primary', 'style' => 'margin-top: 15px']) !!}
                     {!! Form::close() !!}
+                @elseif(Auth::check() && Auth::user()->role != 1)
+                    <p>Negali rašyti komentarų, nes nesate paprastas vartotojas</p>
                 @else
                     <p>Negalite rašyti komentarų nes nesate prisijungęs</p>
                 @endif
