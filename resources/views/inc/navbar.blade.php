@@ -14,9 +14,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/about">Titulinis</a>
                 </li>
-                @if (isset(Auth::user()->id) && Auth::user()->id == 2)
+{{--                If user is an admin--}}
+                @if (isset(Auth::user()->id) && Auth::user()->role == 2)
                     <li class="nav-item">
-                        <a class="nav-link" href="/users">Visi Vartotojai</a>
+                        <a class="nav-link" href="/admin">Visi Vartotojai</a>
                     </li>
                 @endif
             </ul>

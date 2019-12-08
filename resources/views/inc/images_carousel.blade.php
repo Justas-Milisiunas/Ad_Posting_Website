@@ -7,7 +7,7 @@
     <div class="carousel-inner">
         @foreach ($images as $index=>$image)
             <div class="carousel-item {{$index == 0 ? 'active' : ''}}">
-                <img src="/storage/images/noimage.png" class="d-block w-100" alt="Uploaded image {{$index}}">
+                <img src="{{asset('storage/uploads/'.$image->link)}}" class="d-block w-100" alt="Uploaded image {{$index}}">
             </div>
         @endforeach
         <a class="carousel-control-prev" href="#imagesCarousel" role="button" data-slide="prev">
