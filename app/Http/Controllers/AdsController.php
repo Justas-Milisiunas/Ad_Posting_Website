@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Ad;
 use App\Comment;
+use App\Image as Img;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
+use Symfony\Component\Console\Input\Input;
 
 class AdsController extends Controller
 {
@@ -76,9 +79,21 @@ class AdsController extends Controller
         $new_ad->save();
 
         $saved_ad = Ad::find(DB::getPdo()->lastInsertId());
+        if (!file_exists(storage_path('app/public/uploads/' . $saved_ad->id))) {
+            Storage::disk('local')->makeDirectory('public/uploads/' . $saved_ad->id);
+        }
 
-        foreach ($request->file('images') as $i=>$image) {
-            $image->store('public/images/'.$saved_ad->id);
+        foreach ($request->file('images') as $i => $image) {
+            $file_name = time() . '.' . $image->getClientOriginalExtension();
+            Image::make($image->getRealPath())
+                ->resize(300, 200)
+                ->insert(storage_path('app/watermark.png'), 'bottom-right', 10, 10)
+                ->save(storage_path('app/public/uploads/' . $saved_ad->id . '/' . $file_name));
+
+            $new_image = new Img;
+            $new_image->link = $saved_ad->id . '/' . $file_name;
+            $new_image->ad_id = $saved_ad->id;
+            $new_image->save();
         }
 
         return redirect('/')->with('success', 'Skelbimas sėkmingai sukurtas');

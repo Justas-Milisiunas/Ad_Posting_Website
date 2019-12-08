@@ -4,9 +4,10 @@
     {{--    </div>--}}
     {{--    TODO: Add tint on hover--}}
     <div class="card-img-top">
-        <img
-            src="/storage/test/add.png"
-            style="width: 100%;">
+        @if (isset($ad->images))
+            <img
+                src="{{asset('storage/uploads/'.$ad->images[0]->link)}}" class="card-img">
+        @endif
     </div>
     <ul class="list-group list-group-flush">
         <li class="list-group-item list-group-item-secondary">
