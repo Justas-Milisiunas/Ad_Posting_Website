@@ -19,14 +19,11 @@
                         </div>
                         <div class="col-sm-4 text-right">
                             <a href="/ads/{{$ad->id}}/edit" class="btn btn-outline-primary" style="margin-right: 5px">Redaguoti</a>
-                            {{--                            <a href="/ads/{{$ad->id}}" class="btn btn-outline-danger">Šalinti</a>--}}
-                            {!! Form::open(['action' => ['AdsController@destroy', $ad->id], 'method' => 'DELETE', 'class' => 'float-right']) !!}
-                            {!! Form::submit('Šalinti', ['class' => 'btn btn-outline-danger']) !!}
-                            {!! Form::close() !!}
-                            {{--                            {!! Form::open(['action' => ['AdsController@destroy', $post->id], 'method' => 'DELETE', 'class' => 'float-right']) !!}--}}
-                            {{--                            --}}{{--            {{Form::hidden('_method', 'DELETE')}}--}}
-                            {{--                            {{Form::submit('Delete', ['class' => 'btn btn-danger'])}}--}}
-                            {{--                            {!! Form::close() !!}--}}
+                            @if (Auth::check() && Auth::user()->role == 3)
+                                {!! Form::open(['action' => ['AdsController@destroy', $ad->id], 'method' => 'DELETE', 'class' => 'float-right']) !!}
+                                {!! Form::submit('Šalinti', ['class' => 'btn btn-outline-danger']) !!}
+                                {!! Form::close() !!}
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -53,7 +50,7 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <small>Įkėlė <b>{{$ad->user->name}}</b> {{$ad->created_at}}</small>
+                    <small>Peržiūros: <b>{{$ad->views}}</b> Įkėlė <b>{{$ad->user->name}}</b> {{$ad->created_at}}</small>
                 </div>
 
             @endisset
@@ -62,27 +59,29 @@
             <div class="card-body">
                 <h5 class="card-title">Komentarai</h5>
                 <hr>
-                @foreach ($ad->comments as $comment)
-                    @if ($comment->comment_id == null)
-                        <p class="card-text"><b>{{$comment->user->name}}</b> {{$comment->created_at}}</p>
-                        <p class="card-text">{{$comment->message}}</p>
-                        <hr>
-                        <div class="ml-5">
-                            @foreach ($comment->replies as $key=>$reply)
-                                <p class="card-text"><b>{{$reply->user->name}}</b> {{$comment->created_at}}</p>
-                                <p class="card-text">{{$reply->message}}</p>
-                                @if ($key != count($comment->replies) - 1)
-                                    <hr>
-                                @endif
-                            @endforeach
-                        </div>
-                        @if (count($comment->replies) > 0)
+                @if (isset($ad->comments))
+                    @foreach ($ad->comments as $comment)
+                        @if ($comment->comment_id == null)
+                            <p class="card-text"><b>{{$comment->user->name}}</b> {{$comment->created_at}}</p>
+                            <p class="card-text">{{$comment->message}}</p>
                             <hr>
+                            <div class="ml-5">
+                                @foreach ($comment->replies as $key=>$reply)
+                                    <p class="card-text"><b>{{$reply->user->name}}</b> {{$comment->created_at}}</p>
+                                    <p class="card-text">{{$reply->message}}</p>
+                                    @if ($key != count($comment->replies) - 1)
+                                        <hr>
+                                    @endif
+                                @endforeach
+                            </div>
+                            @if (count($comment->replies) > 0)
+                                <hr>
+                            @endif
                         @endif
-                    @endif
-                @endforeach
+                    @endforeach
+                @endif
                 {{--                If user's role is user. Display comment writing form--}}
-                @if (Auth::user()->role == 1)
+                @if (!Auth::guest() && Auth::user()->role == 1)
                     {!! Form::open(['action' => ['CommentsController@store', $ad->id], 'method' => 'POST']) !!}
                     @if (Auth::user()->id == $ad->user_id && count($comments) > 1)
                         <div class="input-group">
@@ -94,6 +93,8 @@
                     </div>
                     {!! Form::submit('Komentuoti', ['class' => 'btn btn-primary', 'style' => 'margin-top: 15px']) !!}
                     {!! Form::close() !!}
+                @else
+                    <p>Negalite rašyti komentarų nes nesate prisijungęs</p>
                 @endif
             </div>
         </div>

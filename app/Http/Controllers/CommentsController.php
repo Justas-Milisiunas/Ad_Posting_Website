@@ -34,6 +34,10 @@ class CommentsController extends Controller
             'comment' => 'required|max:255'
         ]);
 
+        if (!auth()->check()) {
+            return redirect('/ads/' . $ad_id)->with('error', 'Unauthorized Page');
+        }
+
         // Finds ad data from the database
         $ad = Ad::find($ad_id);
 

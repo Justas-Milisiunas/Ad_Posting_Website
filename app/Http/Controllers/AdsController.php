@@ -10,6 +10,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Intervention\Image\Facades\Image;
 use Symfony\Component\Console\Input\Input;
 
@@ -43,7 +44,8 @@ class AdsController extends Controller
      */
     public function create()
     {
-        if (auth()->user()->role != 1) {
+        if (auth()->user()->role != 1 ||
+            auth()->user()->create_ad == false) {
             return redirect('/ads')->with('error', 'Unauthorized Page');
         }
 
@@ -55,11 +57,13 @@ class AdsController extends Controller
      *
      * @param Request $request
      * @return Response
+     * @throws ValidationException
      */
     public function store(Request $request)
     {
         // If not registered user
-        if (auth()->user()->role != 1) {
+        if (auth()->user()->role != 1 ||
+            auth()->user()->create_ad == false) {
             return redirect('/')->with('error', 'Unauthorized Page');
         }
 
@@ -110,9 +114,12 @@ class AdsController extends Controller
         $ad = Ad::find($id);
         $comments = null;
 
-        if (auth()->user()->id == $ad->user_id) {
+        if (auth()->check() && auth()->user()->id == $ad->user_id) {
             $comments = Comment::where('ad_id', $id)->where('comment_id', null)->pluck('message', 'id')->toArray();
         }
+
+        $ad->views += 1;
+        $ad->save();
 
         return view('ads.show')->with('ad', $ad)->with('comments', $comments);
     }
@@ -156,6 +163,10 @@ class AdsController extends Controller
      */
     public function destroy($id)
     {
+        if (!auth()->check() ||
+            auth()->user()->role != 3) {
+            return redirect('/')->with('error', 'Unauthorized Page');
+        }
         $post = Ad::find($id);
 
         // TODO: add access control

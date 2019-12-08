@@ -33,13 +33,9 @@
                     @endif
                 @endisset
             </div>
-            @isset($ads)
-                @if (count($ads) > 0)
-                    <div class="card-footer">
-                        {{$ads->links()}}
-                    </div>
-                @endif
-            @endisset
+            <div class="card-footer">
+                {{$ads->links()}}
+            </div>
         </div>
     </div>
 @stop
