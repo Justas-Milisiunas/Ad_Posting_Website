@@ -86,7 +86,7 @@
                 {{--                If user's role is user. Display comment writing form--}}
                 @if (Auth::check() && Auth::user()->role == 1)
                     {!! Form::open(['action' => ['CommentsController@store', $ad->id], 'method' => 'POST']) !!}
-                    @if (Auth::user()->id == $ad->user_id && count($comments) > 1)
+                    @if (Auth::user()->id == $ad->user_id && count($comments) >= 1)
                         <div class="input-group">
                             {!! Form::select('selected_comment', $comments, null, ['class' => 'form-control']) !!}
                         </div>
